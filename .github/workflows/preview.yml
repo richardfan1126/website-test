@@ -9,6 +9,7 @@ on:
       - closed
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -38,3 +39,14 @@ jobs:
           preview-branch: gh-pages
           umbrella-dir: pr-preview
           action: auto
+
+  dispatch-gh-page-deploy:
+    needs:
+      - deploy-preview
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Dispatch workflow
+        run: |
+          gh workflow run "Deploy content to Pages" --ref "gh-pages"
